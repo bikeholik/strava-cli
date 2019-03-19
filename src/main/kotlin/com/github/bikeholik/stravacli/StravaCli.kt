@@ -7,6 +7,9 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Component
 import java.awt.Desktop
 import java.io.IOException
@@ -19,21 +22,26 @@ inline fun <reified T> T.logger(): Logger {
 }
 
 @Component
-class StravaCli(val athletesApi: AthletesApi, val authChannel: Channel<String>, val stravaClientProperties: StravaClientProperties) : CommandLineRunner {
+class StravaCli(val athletesApi: AthletesApi, val authChannel: Channel<String>, val stravaClientProperties: StravaClientProperties) : CommandLineRunner, ApplicationContextAware {
     val log = logger()
+    private var applicationContext: ConfigurableApplicationContext? = null
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        this.applicationContext = applicationContext as ConfigurableApplicationContext;
+    }
+
     override fun run(vararg args: String?) {
-        browse("https://www.strava.com/oauth/authorize?client_id=" +
-                stravaClientProperties.clientId +
-                "&response_type=code&scope=read&redirect_uri=http://localhost:8080/token")
         runBlocking {
             authorize()
             val athlete = athletesApi.loggedInAthlete
             log.info("Your data: {}", athlete)
         }
-        System.exit(0)
+        applicationContext?.close()
     }
 
     suspend fun authorize() {
+        browse("https://www.strava.com/oauth/authorize?client_id=" +
+                stravaClientProperties.clientId +
+                "&response_type=code&scope=read&redirect_uri=http://localhost:8080/token")
         val token = authChannel.receive()
         (athletesApi.apiClient.authentications.get("strava_oauth") as OAuth).accessToken = token
     }
@@ -43,12 +51,10 @@ class StravaCli(val athletesApi: AthletesApi, val authChannel: Channel<String>, 
             val desktop = Desktop.getDesktop()
             try {
                 desktop.browse(URI(url))
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 // TODO Auto-generated catch block
                 e.printStackTrace()
-            } catch (e: URISyntaxException) {
-                e.printStackTrace()
-            }
+            } 
 
         } else {
             val runtime = Runtime.getRuntime()
