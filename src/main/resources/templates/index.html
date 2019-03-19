@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script language="javascript" type="text/javascript">
+    function setup(){
+        setTimeout(function(){
+            ww = window.open('','_parent','');
+            ww.close();
+        }, 100);
+    }
+
+
+    </script>
+</head>
+<body onload="setup()">
+<b>Tab can be closed, program will continue</b>
+<br/>
+<pre th:text="${authorized_user}"/>
+</body>
+</html>

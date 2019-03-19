@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
 @RestController
 class TokenController(val authChannel: Channel<String>, val stravaClientProperties: StravaClientProperties) {
@@ -14,7 +16,7 @@ class TokenController(val authChannel: Channel<String>, val stravaClientProperti
     val restTemplate = RestTemplate()
 
     @GetMapping("token")
-    fun token(@RequestParam("code") code: String, @RequestParam("error", required = false) error: String?): Map<String, Any?> {
+    fun token(@RequestParam("code") code: String, @RequestParam("error", required = false) error: String?): ModelAndView {
         logger.info("op=token value={}", code)
         val result = restTemplate.postForObject(
                 "https://www.strava.com/oauth/token?code={code}&client_secret={secret}&client_id={clientId}&grant_type=authorization_code",
@@ -27,6 +29,6 @@ class TokenController(val authChannel: Channel<String>, val stravaClientProperti
         GlobalScope.launch {
             authChannel.send(result?.get("access_token") as String)
         }
-        return hashMapOf(Pair("message", "Program will continue"), Pair("authorized_user", result?.get("athlete")))
+        return ModelAndView("index", hashMapOf(Pair("message", "Program will continue"), Pair("authorized_user", result?.get("athlete"))))
     }
 }
