@@ -10,6 +10,7 @@ import io.swagger.client.ApiException
 import io.swagger.client.api.ActivitiesApi
 import org.springframework.stereotype.Component
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.Temporal
 import java.time.LocalDate
 import java.time.Period
@@ -33,17 +34,19 @@ class CloneActivityCommand(val activitiesApi: ActivitiesApi) : CliktCommand(name
             dates()
                     .map { d -> activity.startDateLocal.with { it -> adjustWith(it as OffsetDateTime, d) } }
                     .peek { d -> log.debug("Cloning at {}", d) }
-                    .forEach { d ->
+                    .map { d ->
                         activitiesApi.createActivity(
                                 activity.name,
-                                activity.type.name,
-                                d.toString(),
+                                activity.type.value,
+                                DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(d),
                                 activity.elapsedTime,
-                                activity.description + "\n--cloned from ${activity.id}",
+                                activity.description + "\n --cloned from ${activity.id}",
                                 activity.distance,
                                 activity.isTrainer.toInt(),
-                                "",
+                                null,
                                 activity.isCommute.toInt())
+                    }.forEach { it ->
+                        log.debug("Activity cloned with id: ${it.id}")
                     }
         } catch (e: ApiException) {
             log.error("Failure cloning activity {}", activityId, e)

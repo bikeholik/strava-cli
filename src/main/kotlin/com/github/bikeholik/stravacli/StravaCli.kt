@@ -41,7 +41,7 @@ class Command(val stravaClientProperties: StravaClientProperties, val authChanne
     private suspend fun authorize() {
         browse("https://www.strava.com/oauth/authorize?client_id=" +
                 stravaClientProperties.clientId +
-                "&response_type=code&scope=read,activity:read&redirect_uri=http://localhost:8080/token")
+                "&response_type=code&scope=read,activity:read,activity:write&redirect_uri=http://localhost:8080/token")
         val token = authChannel.receive()
         getOAuth().accessToken = token
     }
