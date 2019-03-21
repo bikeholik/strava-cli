@@ -1,11 +1,13 @@
 package com.github.bikeholik.stravacli
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import org.springframework.boot.builder.SpringApplicationBuilder
 
 @SpringBootApplication
 class StravaCliApplication
 
 fun main(args: Array<String>) {
-	runApplication<StravaCliApplication>(*args)
+    SpringApplicationBuilder(StravaCliApplication::class.java)
+            .logStartupInfo(false)
+            .run(*args)
 }

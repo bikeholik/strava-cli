@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Profile
 import java.awt.Desktop
 import java.io.IOException
 import java.net.URI
@@ -70,6 +71,7 @@ class Command(val stravaClientProperties: StravaClientProperties, val authChanne
 }
 
 @Component
+@Profile("!test")
 class StravaCli(val athletesApi: AthletesApi, val authChannel: Channel<String>, val stravaClientProperties: StravaClientProperties, val commands: List<CliktCommand>) : CommandLineRunner, ApplicationContextAware {
     val log = logger()
     private var applicationContext: ConfigurableApplicationContext? = null
@@ -83,8 +85,7 @@ class StravaCli(val athletesApi: AthletesApi, val authChannel: Channel<String>, 
             command.parse(args.toList().requireNoNulls())
         } catch (e: PrintHelpMessage) {
             log.info("{}", e.command.getFormattedHelp())
-        }
-        Thread.sleep(5000)
+        }        
         applicationContext?.close()
     }
 }
