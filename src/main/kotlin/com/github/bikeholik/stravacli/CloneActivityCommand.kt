@@ -22,6 +22,7 @@ class CloneActivityCommand(val activitiesApi: ActivitiesApi) : CliktCommand(name
     val dates by option("--date").convert { it -> LocalDate.parse(it) }.multiple()
     override fun run() {
         log.info("Get activity {}", activityId)
+//        log.info("Activities: {}", activitiesApi.getLoggedInAthleteActivities(null, null, null, null))
         val activity = activitiesApi.getActivityById(activityId, false)
         log.info("Activity to clone: {}", activity)
         val starts = if (dates.isEmpty()) Stream.of(LocalDate.now()) else dates.stream()
