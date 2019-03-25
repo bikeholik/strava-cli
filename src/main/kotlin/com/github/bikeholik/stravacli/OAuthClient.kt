@@ -1,12 +1,10 @@
 package com.github.bikeholik.stravacli
 
-import io.swagger.client.auth.OAuth
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import java.awt.Desktop
 import java.io.IOException
 import java.net.URI
-import java.security.KeyStore
 
 @Component
 class OAuthClient(val stravaClientProperties: StravaClientProperties) {
@@ -36,13 +34,13 @@ class OAuthClient(val stravaClientProperties: StravaClientProperties) {
         return map(result)
     }
 
-    fun browse() {
-        browse("https://www.strava.com/oauth/authorize?client_id=" +
+    fun redirectToUseBrowser() {
+        redirectToUseBrowser("https://www.strava.com/oauth/authorize?client_id=" +
                 stravaClientProperties.clientId +
                 "&response_type=code&scope=read,activity:read,activity:write&redirect_uri=http://localhost:8080/token")
     }
 
-    private fun browse(url: String) {
+    private fun redirectToUseBrowser(url: String) {
         if (Desktop.isDesktopSupported()) {
             val desktop = Desktop.getDesktop()
             try {
