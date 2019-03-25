@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean
 @Configuration
 class ChannelConfig {
     @Bean
-    fun authChannel(): Channel<String> {
+    fun authChannel(): Channel<Tokens> {
         return Channel(2)
     }
 }
