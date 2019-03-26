@@ -21,7 +21,7 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
     }
 
     private val anonymous by option("--anonymous", "-a").flag()
-    private val keyId by option("--user-alias", "-u").default("id")
+    private val keyId by option("--user-alias", "-u").default("me")
     private val password by option("--password", "-p").convert { KeyStore.PasswordProtection(it.toCharArray()) }.default(KeyStore.PasswordProtection(NO_PASSWORD.toCharArray()))
     private val keyStoreFile = File(".db.pkcs12")
     private val log = logger()
@@ -66,12 +66,16 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
     private fun configure(tokens: Tokens) {
         getOAuth().accessToken = tokens.accessToken
         if (!anonymous) {
-            val keyStore = getKeyStore()
-            val key = tokens.refreshToken.toByteArray()
-            keyStore.setEntry(keyId, KeyStore.SecretKeyEntry(SecretKeySpec(key, "AES")), password)
-            keyStoreFile.outputStream().use {
-                keyStore.store(it, NO_PASSWORD.toCharArray())
-            }
+            saveToken(tokens)
+        }
+    }
+
+    private fun saveToken(tokens: Tokens) {
+        val keyStore = getKeyStore()
+        val key = tokens.refreshToken.toByteArray()
+        keyStore.setEntry(keyId, KeyStore.SecretKeyEntry(SecretKeySpec(key, "AES")), password)
+        keyStoreFile.outputStream().use {
+            keyStore.store(it, NO_PASSWORD.toCharArray())
         }
     }
 
