@@ -1,5 +1,7 @@
 package com.github.bikeholik.stravacli
 
+import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent
+import org.springframework.context.ApplicationListener
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import java.awt.Desktop
@@ -7,9 +9,14 @@ import java.io.IOException
 import java.net.URI
 
 @Component
-class OAuthClient(val stravaClientProperties: StravaClientProperties) {
+class OAuthClient(val stravaClientProperties: StravaClientProperties) : ApplicationListener<ServletWebServerInitializedEvent>{
     private val logger = logger()
     private val restTemplate = RestTemplate()
+    private var serverPort = 8080
+
+    override fun onApplicationEvent(event: ServletWebServerInitializedEvent) {
+        serverPort = event.webServer.port
+    }
 
     fun exchangeToken(code: String): Pair<Map<*, *>?, Tokens> {
         logger.info("op=token value={}", code)
@@ -37,7 +44,7 @@ class OAuthClient(val stravaClientProperties: StravaClientProperties) {
     fun redirectToUseBrowser() {
         redirectToUseBrowser("https://www.strava.com/oauth/authorize?client_id=" +
                 stravaClientProperties.clientId +
-                "&response_type=code&scope=read,activity:read,activity:write&redirect_uri=http://localhost:8080/token")
+                "&response_type=code&scope=read,activity:read,activity:write&redirect_uri=http://localhost:$serverPort/token")
     }
 
     private fun redirectToUseBrowser(url: String) {
