@@ -40,7 +40,7 @@ class CloneActivityCommand(val activitiesApi: ActivitiesApi) : CliktCommand(name
                                 activity.type.value,
                                 DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(it),
                                 activity.elapsedTime,
-                                activity.description + "\n --cloned from ${activity.id}",
+                                activity.description + "\n -- cloned from https://www.strava.com/activities/${activity.id}",
                                 activity.distance,
                                 activity.isTrainer.toInt(),
                                 null,
