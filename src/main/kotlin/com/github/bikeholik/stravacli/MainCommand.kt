@@ -80,13 +80,15 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
     }
 
     private fun getKeyStore(): KeyStore {
+        val ks = KeyStore.getInstance("PKCS12")
         if (keyStoreFile.exists()) {
-            return KeyStore.getInstance(keyStoreFile, NO_PASSWORD.toCharArray())
+            keyStoreFile.inputStream().use {
+                ks.load(it, NO_PASSWORD.toCharArray())
+            }
         } else {
-            val ks = KeyStore.getInstance("PKCS12")
             ks.load(null, null)
-            return ks
         }
+        return ks
     }
 
     private fun getOAuth() = (apiClient.authentications.get("strava_oauth") as OAuth)
