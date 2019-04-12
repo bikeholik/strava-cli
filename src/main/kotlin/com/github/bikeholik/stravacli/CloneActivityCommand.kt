@@ -62,7 +62,7 @@ class CloneActivityCommand(val activitiesApi: ActivitiesApi) : CliktCommand(name
         } else if (!dates.isEmpty()) {
             return dates.stream()
         } else {
-            return LongStream.range(0, Period.between(from, to).days.toLong())
+            return LongStream.rangeClosed(0, Period.between(from, to).days.toLong())
                     .mapToObj { i -> from?.plusDays(i) }
 
         }
