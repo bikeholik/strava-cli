@@ -20,7 +20,7 @@ inline fun <reified T> T.logger(): Logger {
 }
 
 @Component
-@Profile("!test")
+@Profile("cli")
 class StravaCli(val athletesApi: AthletesApi, val authChannel: Channel<Tokens>, val oAuthClient: OAuthClient, val commands: List<CliktCommand>) : CommandLineRunner, ApplicationContextAware {
     val log = logger()
     private var applicationContext: ConfigurableApplicationContext? = null

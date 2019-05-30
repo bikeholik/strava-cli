@@ -28,3 +28,17 @@ hs_err_pid*
 
 # Build
 out/
+generated-java/
+generated-kotlin/
+build/
+.gradle/
+
+# react tests
+src/jhipster
+src/webapp
+node_modules/
+
+# local
+.db.pkcs12
+*-local.yml
+*-local.properties

@@ -2,6 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.1.3.RELEASE'
 	id 'org.jetbrains.kotlin.jvm' version '1.3.20'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.3.20'
+	id "com.github.node-gradle.node" version "1.3.0"
+	id "idea"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -16,6 +18,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-jetty'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
@@ -32,6 +35,10 @@ dependencies {
 	testImplementation 'io.projectreactor:reactor-test'
 }
 
+configurations {
+	compile.exclude module: "spring-boot-starter-tomcat"
+}
+
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ['-Xjsr305=strict']
@@ -43,5 +50,27 @@ compileTestKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ['-Xjsr305=strict']
 		jvmTarget = '1.8'
+	}
+}
+
+if (project.hasProperty("prod")) {
+	apply from: "gradle/profile_prod.gradle"
+} else {
+	apply from: "gradle/profile_dev.gradle"
+}
+
+if (project.hasProperty("nodeInstall")) {
+	node {
+		version = "${node_version}"
+		npmVersion = "${npm_version}"
+		yarnVersion = "${yarn_version}"
+		download = true
+	}
+}
+
+idea {
+	module {
+		excludeDirs += files("node_modules")
+		resourceDirs += files("build/resources/main")
 	}
 }
