@@ -42,7 +42,7 @@ module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
     contentBase: './build/resources/main/static/',
     proxy: [{
       context: [
-        '/'
+        '/api'
       ],
       target: `http${options.tls ? 's' : ''}://localhost:8080`,
       secure: false,
@@ -51,7 +51,8 @@ module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
     watchOptions: {
       ignored: /node_modules/
     },
-    https: options.tls
+    https: options.tls,
+    historyApiFallback: true
   },
   stats: process.env.JHI_DISABLE_WEBPACK_LOGS ? 'none' : options.stats,
   plugins: [

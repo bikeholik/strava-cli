@@ -44,7 +44,7 @@ class OAuthClient(val stravaClientProperties: StravaClientProperties) : Applicat
     fun redirectToUseBrowser() {
         redirectToUseBrowser("https://www.strava.com/oauth/authorize?client_id=" +
                 stravaClientProperties.clientId +
-                "&response_type=code&scope=read,activity:read,activity:write&redirect_uri=http://localhost:$serverPort/token")
+                "&response_type=code&scope=read,activity:read,activity:write&redirect_uri=http://localhost:$serverPort/api/token")
     }
 
     private fun redirectToUseBrowser(url: String) {

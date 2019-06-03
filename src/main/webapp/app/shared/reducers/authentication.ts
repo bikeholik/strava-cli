@@ -11,7 +11,7 @@ export const ACTION_TYPES = {
   ERROR_MESSAGE: 'authentication/ERROR_MESSAGE'
 };
 
-const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
+export const AUTH_TOKEN_KEY = 'oauth-token';
 
 const initialState = {
   loading: false,
@@ -28,6 +28,15 @@ const initialState = {
 };
 
 export type AuthenticationState = Readonly<typeof initialState>;
+
+const initialToken = {
+  type: null as string,
+  expiresAt: 0,
+  token: null as string,
+  refreshToken: null as string
+};
+
+export type OAuthToken = Readonly<typeof initialToken>;
 
 // Reducer
 
@@ -103,7 +112,10 @@ export const displayAuthError = message => ({ type: ACTION_TYPES.ERROR_MESSAGE, 
 export const getSession = () => async (dispatch, getState) => {
   dispatch({
     type: ACTION_TYPES.GET_SESSION,
-    payload: axios.get('api/account')
+    // payload: axios.get('api/account')
+    payload: {
+
+    }
   });
 };
 
@@ -132,23 +144,30 @@ const config = {
   }
 };
 
-const transformRequest = (jsonData: any = {}) =>
+const transformRequest = (jsonData: object = {}) =>
     Object.entries(jsonData)
         .map(x => `${encodeURIComponent(x[0])}=${encodeURIComponent(x[1])}`)
         .join('&');
 
 export const login = (code, rememberMe = false) => async (dispatch, getState) => {
+  const redirectBaseUrl = location.origin;
   const result = await dispatch({
     type: ACTION_TYPES.LOGIN,
-    payload: axios.post(`${AUTH_API_URI}`, transformRequest({ code }), config)
+    payload: axios.post(`${redirectBaseUrl}/api/authorize`, transformRequest({ code }), config)
   });
-  const bearerToken = result.value.headers.authorization;
-  if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
-    const jwt = bearerToken.slice(7, bearerToken.length);
+  // const bearerToken = result.value.headers.authorization;
+  const payload = result.value.data;
+  const token: OAuthToken = {
+    type: payload.token_type,
+    expiresAt: payload.expires_at,
+    token: payload.access_token,
+    refreshToken: payload.refresh_token
+  };
+  if (token.type === 'Bearer') {
     if (rememberMe) {
-      Storage.local.set(AUTH_TOKEN_KEY, jwt);
+      Storage.local.set(AUTH_TOKEN_KEY, token);
     } else {
-      Storage.session.set(AUTH_TOKEN_KEY, jwt);
+      Storage.session.set(AUTH_TOKEN_KEY, token);
     }
   }
   // await dispatch(getSession());

@@ -5,8 +5,11 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { IRootState } from 'app/shared/reducers';
 import { login } from 'app/shared/reducers/authentication';
 
-export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<{}> {
+export interface IRouter {
     code: string;
+}
+
+export interface ILoginProps extends StateProps, DispatchProps, RouteComponentProps<IRouter> {
 }
 
 export interface ILoginState {
@@ -64,10 +67,7 @@ export class Login extends React.Component<ILoginProps, ILoginState> {
         //   });
         //   return;
         // }
-        // const code =
-        //     window.location.href.match(REGEXP) &&
-        //     window.location.href.match(REGEXP)[1];
-        const code = this.props.match.params.code;
+        const code = window.location.href.match(REGEXP) ? window.location.href.match(REGEXP)[1] : this.props.match.params.code;
         if (code) {
             // this.setState({ status: 'STATUS.LOADING' });
             // fetch(`${AUTH_API_URI}?code=${code}`, { method: 'post' })
@@ -87,7 +87,7 @@ export class Login extends React.Component<ILoginProps, ILoginState> {
             //             });
             //         }, 3000);
             //     });
-            this.handleLogin(code);
+            this.handleLogin(code, true);
         }
     }
 
@@ -109,7 +109,7 @@ export class Login extends React.Component<ILoginProps, ILoginState> {
                         display:
                             this.state.status === 'STATUS.INITIAL' ? 'inline' : 'none'
                     }}
-                    href={`${STRAVA_BASE_URL}?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPES}&redirect_uri=${redirectBaseUrl}`}
+                    href={`${STRAVA_BASE_URL}?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPES}&redirect_uri=${redirectBaseUrl}/login`}
                 >
                     Login
                 </a>

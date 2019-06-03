@@ -31,6 +31,12 @@ export class App extends React.Component<IAppProps> {
     this.props.getProfile();
   }
 
+  componentWillReceiveProps(nextProps: Readonly<IAppProps>, nextContext: any): void {
+    if (!this.props.isAuthenticated && nextProps.isAuthenticated) {
+      this.props.getProfile();
+    }
+  }
+
   render() {
     const paddingTop = '60px';
     return (
@@ -54,6 +60,7 @@ export class App extends React.Component<IAppProps> {
             </Card>
             <Footer />
           </div>
+          <span>{JSON.stringify(this.props.data)}</span>
         </div>
       </Router>
     );
@@ -65,7 +72,8 @@ const mapStateToProps = ({ authentication, applicationProfile }: IRootState) => 
   isAdmin: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.ADMIN]),
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
-  isSwaggerEnabled: applicationProfile.isSwaggerEnabled
+  isSwaggerEnabled: applicationProfile.isSwaggerEnabled,
+  data: applicationProfile.message
 });
 
 const mapDispatchToProps = { getSession, getProfile };

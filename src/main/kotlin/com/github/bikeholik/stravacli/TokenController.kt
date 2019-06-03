@@ -3,13 +3,12 @@ package com.github.bikeholik.stravacli
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
+import java.security.Principal
 
 @RestController
+@RequestMapping("api")
 class TokenController(val authChannel: Channel<Tokens>, val oAuthClient: OAuthClient) {
 
     @GetMapping("token")
@@ -18,12 +17,18 @@ class TokenController(val authChannel: Channel<Tokens>, val oAuthClient: OAuthCl
         GlobalScope.launch {
             authChannel.send(result.second)
         }
-        return ModelAndView("index", hashMapOf(Pair("message", "Program will continue"), Pair("authorized_user", result.first?.get("athlete"))))
+        return ModelAndView("post-auth", hashMapOf(Pair("message", "Program will continue"), Pair("authorized_user", result.first?.get("athlete"))))
     }
 
     @PostMapping("authorize")
     fun authenticate(@RequestParam("code") code: String): Map<*, *>? {
         val result = oAuthClient.exchangeToken(code)
         return result.first
+    }
+
+    @GetMapping("profile")
+    fun getProfile(principal : Principal?): Map<*, *> {
+        logger().info("op=getProfile principal={}", principal)
+        return mapOf("now" to System.currentTimeMillis(), "principal" to (principal != null));
     }
 }

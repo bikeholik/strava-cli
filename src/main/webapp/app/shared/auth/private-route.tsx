@@ -5,6 +5,8 @@ import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { IRootState } from 'app/shared/reducers';
 import ErrorBoundary from 'app/shared/error/error-boundary';
 
+const IGNORE_SESSION = true;
+
 interface IOwnProps extends RouteProps {
   hasAnyAuthorities?: string[];
 }
@@ -31,7 +33,7 @@ export const PrivateRouteComponent = ({
     );
 
   const renderRedirect = props => {
-    if (!sessionHasBeenFetched) {
+    if (!sessionHasBeenFetched && !IGNORE_SESSION) {
       return <div />;
     } else {
       return isAuthenticated ? (

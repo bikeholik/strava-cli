@@ -9,7 +9,8 @@ export const ACTION_TYPES = {
 const initialState = {
   ribbonEnv: '',
   inProduction: true,
-  isSwaggerEnabled: false
+  isSwaggerEnabled: false,
+  message: null
 };
 
 export type ApplicationProfileState = Readonly<typeof initialState>;
@@ -20,9 +21,10 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
       const { data } = action.payload;
       return {
         ...state,
-        ribbonEnv: data['display-ribbon-on-profiles'],
-        inProduction: data.activeProfiles.includes('prod'),
-        isSwaggerEnabled: data.activeProfiles.includes('swagger')
+        // ribbonEnv: data['display-ribbon-on-profiles'],
+        // inProduction: data.activeProfiles.includes('prod'),
+        // isSwaggerEnabled: data.activeProfiles.includes('swagger'),
+        message: data
       };
     default:
       return state;
@@ -31,5 +33,5 @@ export default (state: ApplicationProfileState = initialState, action): Applicat
 
 export const getProfile = () => ({
   type: ACTION_TYPES.GET_PROFILE,
-  payload: axios.get('management/info')
+  payload: axios.get('api/profile')
 });
