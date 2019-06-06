@@ -20,14 +20,16 @@ export class Athlete extends React.Component<IStravaProp, IStravaProp2> {
 
     constructor(props: IStravaProp, context: any) {
         super(props, context);
-        this.setState({});
+        this.state = {
+            account: null
+        };
     }
 
     componentDidMount(): void {
       axios.get('/api/test')
           .then(respone => respone.data)
           .then(data => this.setState({ account: data }))
-          .catch( error => this.setState({
+          .catch(error => this.setState({
               account: {
                   error,
                   message: 'from code'

@@ -8,16 +8,22 @@ export interface IMenuItem {
   icon: IconProp;
   to: string;
   id?: string;
+  external?: boolean;
 }
 
 export default class MenuItem extends React.Component<IMenuItem> {
   render() {
-    const { to, icon, id, children } = this.props;
+    const { to, icon, id, external, children } = this.props;
 
     return (
+        !external ?
       <DropdownItem tag={Link} to={to} id={id}>
         <FontAwesomeIcon icon={icon} fixedWidth /> {children}
       </DropdownItem>
+            :
+            <DropdownItem tag="a" href={to} id={id}>
+              <FontAwesomeIcon icon={icon} fixedWidth /> {children}
+            </DropdownItem>
     );
   }
 }

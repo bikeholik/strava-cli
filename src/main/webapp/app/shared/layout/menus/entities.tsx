@@ -8,7 +8,10 @@ import { NavDropdown } from './menu-components';
 
 export const EntitiesMenu = props => (
   // tslint:disable-next-line:jsx-self-close
-  <NavDropdown icon="th-list" name="Entities" id="entity-menu">
+  <NavDropdown icon="th-list" name="Actions" id="entity-menu">
     {/* jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here */}
+    <MenuItem icon="clone" to="/clone">
+      Clone activity
+    </MenuItem>
   </NavDropdown>
 );

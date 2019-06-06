@@ -5,11 +5,10 @@ import Loadable from 'react-loadable';
 import Login from 'app/modules/login/login';
 import Logout from 'app/modules/login/logout';
 import Home from 'app/modules/home/home';
-import Entities from 'app/entities';
 import PrivateRoute from 'app/shared/auth/private-route';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 import PageNotFound from 'app/shared/error/page-not-found';
-import { AUTHORITIES } from 'app/config/constants';
+import Clone from 'app/modules/strava/clone';
 
 // tslint:disable:space-in-parens
 
@@ -24,8 +23,7 @@ const Routes = () => (
     <Switch>
       <ErrorBoundaryRoute path={ ['/login/:code', '/login'] } component={Login} />
       <ErrorBoundaryRoute path="/logout" component={Logout} />
-      <PrivateRoute path="/admin" component={Admin} hasAnyAuthorities={[AUTHORITIES.ADMIN]} />
-      <PrivateRoute path="/entity" component={Entities} hasAnyAuthorities={[AUTHORITIES.USER]} />
+      <PrivateRoute path="/clone" component={Clone} />
       <ErrorBoundaryRoute path="/" exact component={Home} />
       <ErrorBoundaryRoute component={PageNotFound} />
     </Switch>

@@ -40,9 +40,13 @@ module.exports = (options) => webpackMerge(commonConfig({ env: ENV }), {
     stats: options.stats,
     hot: true,
     contentBase: './build/resources/main/static/',
+    // proxy: {
+    //   '/api' : `http${options.tls ? 's' : ''}://localhost:8080`,
+    //   '/cli': `http${options.tls ? 's' : ''}://localhost:8080`
+    // },
     proxy: [{
       context: [
-        '/api'
+        '/api', '/cli'
       ],
       target: `http${options.tls ? 's' : ''}://localhost:8080`,
       secure: false,

@@ -54,6 +54,16 @@ module.exports = options => ({
   module: {
     rules: [
       {
+        test: /\.js$/, // Transform all .js files required somewhere with Babel
+        exclude: /node_modules[\\/](?!@av).*/,
+        use: {
+          loader: 'babel-loader',
+            options: {
+                configFile: './babel.config.js'
+            }
+        },
+      },
+      {
         test: /\.tsx?$/,
         use: getTsLoaderRule(options.env),
         include: [utils.root('./src/main/webapp/app')],

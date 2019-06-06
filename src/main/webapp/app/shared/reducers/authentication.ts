@@ -72,6 +72,7 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         showModalLogin: false,
         loginSuccess: true,
         account: action.payload.data,
+        sessionHasBeenFetched: true,
         isAuthenticated: true
       };
     case ACTION_TYPES.LOGOUT:

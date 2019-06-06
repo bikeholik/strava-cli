@@ -18,6 +18,7 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
 
     companion object {
         const val NO_PASSWORD = ""
+        fun getOAuth(client: ApiClient) = (client.authentications.get("strava_oauth") as OAuth)
     }
 
     private val anonymous by option("--anonymous", "-a").flag()
@@ -54,7 +55,7 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
     }
 
     private fun isAuthorized(): Boolean {
-        return getOAuth().accessToken != null
+        return getOAuth(apiClient).accessToken != null
     }
 
     private suspend fun authorize() {
@@ -64,7 +65,7 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
     }
 
     private fun configure(tokens: Tokens) {
-        getOAuth().accessToken = tokens.accessToken
+        getOAuth(apiClient).accessToken = tokens.accessToken
         if (!anonymous) {
             saveToken(tokens)
         }
@@ -90,6 +91,4 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
         }
         return ks
     }
-
-    private fun getOAuth() = (apiClient.authentications.get("strava_oauth") as OAuth)
 }

@@ -3,6 +3,7 @@ package com.github.bikeholik.stravacli
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
 
 
 @Controller
@@ -11,7 +12,7 @@ class SPAErrorController : ErrorController {
         return "/error"
     }
 
-    @RequestMapping("/error")
+    @RequestMapping("/error", method = [RequestMethod.GET, RequestMethod.POST])
     fun handleError(): String {
         //do something like logging
         return "index.html"
