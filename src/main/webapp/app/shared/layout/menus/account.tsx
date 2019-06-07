@@ -22,9 +22,6 @@ const accountMenuItemsAuthenticated = (
 
 const accountMenuItems = (
   <>
-    {/*<MenuItem id="login-item" icon="sign-in-alt" to="/login">*/}
-    {/*  Sign in*/}
-    {/*</MenuItem>*/}
       <MenuItem id="login-item" to={CONNECT_URL} external=true>
           <img src="/content/images/btn_strava_connectwith_orange.svg" alt="Connect with Strava"/>
       </MenuItem>

@@ -27,9 +27,10 @@ export class Clone extends React.Component<IStravaProp, ICloneActivity> {
     }
 
     clone = (event, errors, values) => {
-      axios.post('/cli/activities', values)
+        this.setState({ loading: true });
+        axios.post('/cli/activities', values)
           .then(respone => respone.data)
-          .then(data => this.setState({ result: data }));
+          .then(data => this.setState({ result: data, loading: false }));
     };
 
     render() {
@@ -68,6 +69,9 @@ export class Clone extends React.Component<IStravaProp, ICloneActivity> {
                     <Button color="primary">Clone</Button>
                   </FormGroup>
               </AvForm>
+              { this.state.loading &&
+                  <span>Working...</span>
+              }
               { result &&
               <Container class="text-left">
                   <span>Result:</span>

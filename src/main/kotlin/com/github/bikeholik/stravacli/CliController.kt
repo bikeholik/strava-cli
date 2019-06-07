@@ -17,7 +17,7 @@ class CliController(val objectMapper: ObjectMapper, val cloneActivityService: Cl
     @PostMapping("activities")
     fun clone(principal: Principal?, @RequestBody params: CloneRequest): Map<*, *> {
         logger().info("op=clone principal={} params={}", principal, params)
-        val res = hashMapOf("now" to System.currentTimeMillis(), "principal" to (principal != null));
+        val res = hashMapOf<String, Any>()
         res.putAll(map(params))
         res.putAll(mapOf("clonedActivities" to cloneActivityService.clone(params.activityId, toStream(params), true)
                 .stream()

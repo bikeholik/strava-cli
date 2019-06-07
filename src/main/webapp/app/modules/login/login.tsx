@@ -14,21 +14,16 @@ export interface ILoginProps extends StateProps, DispatchProps, RouteComponentPr
 
 export interface ILoginState {
     showModal: boolean;
-    token: object;
+    code: string;
     status: string;
 }
 
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-const AUTH_API_URI = process.env.REACT_APP_AUTH_API_URI;
 const REGEXP = /(?:\?|&)code=([^&]+)/;
-const STRAVA_BASE_URL = 'https://www.strava.com/oauth/authorize';
-const SCOPES = 'read,activity:read,activity:write';
 
 export class Login extends React.Component<ILoginProps, ILoginState> {
     state: ILoginState = {
         showModal: this.props.showModal,
-        token: null,
+        code: window.location.href.match(REGEXP) ? window.location.href.match(REGEXP)[1] : this.props.match.params.code,
         status: 'STATUS.INITIAL'
     };
 
@@ -46,53 +41,14 @@ export class Login extends React.Component<ILoginProps, ILoginState> {
         this.setState({ showModal: false });
     };
 
-    // render() {
-    //   const { location, isAuthenticated } = this.props;
-    //   const { from } = location.state || { from: { pathname: '/', search: location.search } };
-    //   const { showModal } = this.state;
-    //   if (isAuthenticated) {
-    //     return <Redirect to={from} />;
-    //   }
-    //   return (
-    //     <LoginModal showModal={showModal} handleLogin={this.handleLogin} handleClose={this.handleClose} loginError={this.props.loginError} />
-    //   );
-    // }
-
     componentDidMount() {
-        // TODO in main ?
-        // const storedToken = localStorage.getItem("github_token");
-        // if (storedToken) {
-        //   this.setState({
-        //     status: STATUS.AUTHENTICATED
-        //   });
-        //   return;
-        // }
-        const code = window.location.href.match(REGEXP) ? window.location.href.match(REGEXP)[1] : this.props.match.params.code;
+        const code = this.state.code;
         if (code) {
-            // this.setState({ status: 'STATUS.LOADING' });
-            // fetch(`${AUTH_API_URI}?code=${code}`, { method: 'post' })
-            //     .then(response => response.json())
-            //     .then(token => {
-            //         if (token) {
-            //             localStorage.setItem('github_token', token);
-            //         }
-            //         this.setState({
-            //             status: 'STATUS.FINISHED_LOADING',
-            //             token
-            //         });
-            //
-            //         setTimeout(() => {
-            //             this.setState({
-            //                 status: 'STATUS.AUTHENTICATED'
-            //             });
-            //         }, 3000);
-            //     });
             this.handleLogin(code, true);
         }
     }
 
     render() {
-        const redirectBaseUrl = location.origin;
         if (this.state.status === 'STATUS.AUTHENTICATED' || this.props.isAuthenticated) {
             return (
                 <Redirect to={{
@@ -103,31 +59,14 @@ export class Login extends React.Component<ILoginProps, ILoginState> {
                 );
         }
         return (
-            <div>
-                <a
-                    style={{
-                        display:
-                            this.state.status === 'STATUS.INITIAL' ? 'inline' : 'none'
-                    }}
-                    href={`${STRAVA_BASE_URL}?client_id=${CLIENT_ID}&response_type=code&scope=${SCOPES}&redirect_uri=${redirectBaseUrl}/login`}
-                >
-                    Login
-                </a>
-                {/*<Loading*/}
-                {/*    status={this.state.status}*/}
-                {/*    callback={() => {*/}
-                {/*      if (this.props.status !== STATUS.AUTHENTICATED) {*/}
-                {/*        this.setState({*/}
-                {/*          status: STATUS.AUTHENTICATED*/}
-                {/*        });*/}
-                {/*      }*/}
-                {/*    }}*/}
-                {/*/>*/}
-                { this.state.token !== null &&
-                <pre>{JSON.stringify(this.state.token, null, '  ')}</pre>
-                }
+            <div className="app-loading">
+                <div className="lds-css ng-scope">
+                    <div className="lds-pacman">
+                        <div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+                        <div><div>&nbsp;</div><div>&nbsp;</div><div>&nbsp;</div></div>
+                    </div>
+                </div>
             </div>
-
         )
             ;
     }

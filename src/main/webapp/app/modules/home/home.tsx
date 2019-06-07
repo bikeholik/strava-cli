@@ -25,10 +25,7 @@ export class Home extends React.Component<IHomeProp> {
       <Row>
         <Col md="9">
           <h2>Welcome to <b>strava-cli</b>!</h2>
-          <p className="lead">This is your homepage</p>
-          { account &&
-          <pre>{JSON.stringify(account, null, '  ')}</pre>
-          }
+          <p className="lead">Homepage</p>
           {account && account.athlete ? (
             <div>
               <Alert color="success">You are logged in as user {account.athlete.username}.</Alert>
@@ -37,14 +34,7 @@ export class Home extends React.Component<IHomeProp> {
           ) : (
             <div>
               <Alert color="warning">
-                If you want to
-                <Link to="/login" className="alert-link">
-                  {' '}
-                  sign in
-                </Link>
-                , you can try the default accounts:
-                <br />- Administrator (login=&quot;admin&quot; and password=&quot;admin&quot;)
-                <br />- User (login=&quot;user&quot; and password=&quot;user&quot;).
+                If you want to use <b>strava-cli</b> login with strava using menu button.
               </Alert>
             </div>
           )}

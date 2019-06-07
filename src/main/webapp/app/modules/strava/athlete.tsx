@@ -12,38 +12,22 @@ export interface IStravaProp extends StateProps, DispatchProps {
     account: any;
 }
 
-export interface IStravaProp2 {
-    account: any;
-}
-
-export class Athlete extends React.Component<IStravaProp, IStravaProp2> {
+export class Athlete extends React.Component<IStravaProp> {
 
     constructor(props: IStravaProp, context: any) {
         super(props, context);
-        this.state = {
-            account: null
-        };
     }
 
-    componentDidMount(): void {
-      axios.get('/api/test')
-          .then(respone => respone.data)
-          .then(data => this.setState({ account: data }))
-          .catch(error => this.setState({
-              account: {
-                  error,
-                  message: 'from code'
-              }
-          }));
-  }
-
     render() {
-    const { account } = this.state;
+    const { account } = this.props;
     return (
       <Row>
         <Col md="12">
-          { account &&
-          <pre>{JSON.stringify(account, null, '  ')}</pre>
+          { account.athlete &&
+          <>
+          <span>Strava account data:</span>
+          <pre>{JSON.stringify(account.athlete, null, '  ')}</pre>
+          </>
           }
         </Col>
       </Row>
@@ -52,8 +36,8 @@ export class Athlete extends React.Component<IStravaProp, IStravaProp2> {
 }
 
 const mapStateToProps = storeState => ({
-  account: storeState.authentication.account,
-  isAuthenticated: storeState.authentication.isAuthenticated
+    isAuthenticated: storeState.authentication.isAuthenticated,
+    account: storeState.authentication.account
 });
 
 const mapDispatchToProps = { getSession };
