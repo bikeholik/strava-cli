@@ -16,3 +16,7 @@ Command line strava client
   * --from VALUE       
   * --to VALUE         
   * --weekdays-only
+
+## Web version
+
+Test application built with react using jhipster is available at http://104.199.78.132/

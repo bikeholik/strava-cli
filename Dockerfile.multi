@@ -1,0 +1,11 @@
+FROM openjdk:8-jdk-slim as builder
+
+COPY . /tmp/
+WORKDIR /tmp
+RUN ./gradlew build -Pprod -PnodeInstall --debug --stacktrace
+
+FROM openjdk:8-jre-slim
+EXPOSE 8080
+COPY --from=builder /tmp/build/libs/*.jar /app/strava-cli.jar
+WORKDIR /app
+CMD java -jar strava-cli.jar

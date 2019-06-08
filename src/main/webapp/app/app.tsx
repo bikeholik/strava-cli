@@ -28,7 +28,7 @@ export interface IAppProps extends StateProps, DispatchProps {}
 export class App extends React.Component<IAppProps> {
   componentDidMount() {
     this.props.getSession();
-    this.props.getProfile();
+    // this.props.getProfile();
   }
 
   componentWillReceiveProps(nextProps: Readonly<IAppProps>, nextContext: any): void {

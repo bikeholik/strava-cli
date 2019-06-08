@@ -1,6 +1,7 @@
 import React from 'react';
 import { AvDateRangeField } from '@availity/reactstrap-validation-date';
 import { AvForm, AvField } from 'availity-reactstrap-validation';
+import '@availity/reactstrap-validation-date/styles.scss';
 import { connect } from 'react-redux';
 import { Row, Col, Button, FormGroup, Container } from 'reactstrap';
 import axios from 'axios';

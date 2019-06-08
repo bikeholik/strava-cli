@@ -19,7 +19,7 @@ class OAuthClient(val stravaClientProperties: StravaClientProperties) : Applicat
     }
 
     fun exchangeToken(code: String): Pair<Map<*, *>?, Tokens> {
-        logger.info("op=token value={}", code)
+        logger.debug("op=token value={}", code)
         val result = restTemplate.postForObject(
                 "https://www.strava.com/oauth/token?code={code}&client_secret={secret}&client_id={clientId}&grant_type=authorization_code",
                 null,

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: strava-cli
+  labels:
+    app: strava-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: strava-cli
+  template:
+    metadata:
+      labels:
+        app: strava-cli
+    spec:
+      containers:
+        - image: gcr.io/strava-cli/strava-cli:0.0.1
+          name: strava-cli
+          env:
+            - name: STRAVA_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: strava-cli
+                  key: secret
+          ports:
+            - containerPort: 8080
+              name: strava-cli
