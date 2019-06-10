@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: strava-cli-ingress
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  tls:
+    - secretName: dodekstudio-cert
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: strava-cli
+              servicePort: 80

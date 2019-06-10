@@ -19,4 +19,4 @@ Command line strava client
 
 ## Web version
 
-Test application built with react using jhipster is available at http://104.199.78.132/
+Test application built with react using jhipster is deployed in test kubernetes cluster in google cloud platform at https://strava-cli.dodekstudio.com/
