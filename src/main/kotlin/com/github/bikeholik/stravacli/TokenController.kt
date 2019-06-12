@@ -1,14 +1,16 @@
 package com.github.bikeholik.stravacli
 
+import io.swagger.client.api.AthletesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
+import java.util.HashMap
 
 @RestController
 @RequestMapping("api")
-class TokenController(val authChannel: Channel<Tokens>, val oAuthClient: OAuthClient) {
+class TokenController(val authChannel: Channel<Tokens>, val oAuthClient: OAuthClient, val athletesApi: AthletesApi) {
 
     @GetMapping("token")
     fun token(@RequestParam("code") code: String, @RequestParam("error", required = false) error: String?): ModelAndView {
@@ -24,4 +26,17 @@ class TokenController(val authChannel: Channel<Tokens>, val oAuthClient: OAuthCl
         val result = oAuthClient.exchangeToken(code)
         return result.first
     }
+
+    @PostMapping("refresh")
+    fun refresh(@RequestParam("refresh_token") token: String): Map<*, *>? {
+        val result = oAuthClient.refreshToken(token)
+        val res = hashMapOf<String, Any>()
+        res.putAll(rawResult(result))
+        res["athlete"] = athletesApi.loggedInAthlete
+        return result.first
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun rawResult(result: Pair<Map<*, *>?, Tokens>) =
+            (result.first!! as Map<out String, Any>)
 }

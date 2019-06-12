@@ -30,7 +30,7 @@ class OAuthClient(val stravaClientProperties: StravaClientProperties) : Applicat
         return Pair(result, map(result))
     }
 
-    fun refreshToken(token: String): Tokens {
+    fun refreshToken(token: String): Pair<Map<*, *>?, Tokens> {
         val result = restTemplate.postForObject(
                 "https://www.strava.com/oauth/token?refresh_token={token}&client_secret={secret}&client_id={clientId}&grant_type=refresh_token",
                 null,
@@ -38,7 +38,7 @@ class OAuthClient(val stravaClientProperties: StravaClientProperties) : Applicat
                 token,
                 stravaClientProperties.clientSecret,
                 stravaClientProperties.clientId);
-        return map(result)
+        return Pair(result, map(result))
     }
 
     fun redirectToUseBrowser() {

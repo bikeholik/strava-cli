@@ -17,13 +17,13 @@ fun Boolean.toInt() = if (this) 1 else 0
 class CloneActivityService(val activitiesApi: ActivitiesApi) {
     val log = logger()
 
-    fun clone(activityId: Long, targetDates: Stream<LocalDate>, weekdaysOnly: Boolean): List<DetailedActivity> {
+    fun clone(activityId: Long, targetDates: Stream<LocalDate>, weekdaysOnly: Boolean): Pair<DetailedActivity, List<DetailedActivity>> {
         log.debug("Get activity {}", activityId)
 
         val activity = activitiesApi.getActivityById(activityId, false)
         log.debug("Activity to clone: {}", activity)
 
-        return targetDates
+        return Pair(activity, targetDates
                 .map { d -> activity.startDateLocal.with { adjustWith(it as OffsetDateTime, d) } }
                 .filter { !weekdaysOnly || isWeekday(it.dayOfWeek) }
                 .peek { log.debug("Cloning at {}", it) }
@@ -39,7 +39,7 @@ class CloneActivityService(val activitiesApi: ActivitiesApi) {
                             null,
                             activity.isCommute.toInt())
                 }
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()))
     }
 
     private fun isWeekday(dayOfWeek: DayOfWeek): Boolean {

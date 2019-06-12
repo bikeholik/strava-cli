@@ -49,7 +49,7 @@ class MainCommand(val oAuthClient: OAuthClient, val authChannel: Channel<Tokens>
             val key = keyStore.getEntry(keyId, password) as KeyStore.SecretKeyEntry
             val token = String(key.secretKey.encoded)
             log.debug("Token read: {}", token)
-            val tokens = oAuthClient.refreshToken(token)
+            val tokens = oAuthClient.refreshToken(token).second
             configure(tokens)
         }
     }

@@ -1,13 +1,11 @@
 import './home.scss';
 
 import React from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
-import { connect } from 'react-redux';
-import { Row, Col, Alert } from 'reactstrap';
-
-import { IRootState } from 'app/shared/reducers';
-import { getSession } from 'app/shared/reducers/authentication';
+import {connect} from 'react-redux';
+import {Alert, Col, Row} from 'reactstrap';
+import {getSession} from 'app/shared/reducers/authentication';
 import Athlete from 'app/modules/strava/athlete';
 
 export interface IHomeProp extends StateProps, DispatchProps {}
@@ -16,7 +14,7 @@ const REGEXP = /(?:\?|&)code=([^&]+)/;
 
 export class Home extends React.Component<IHomeProp> {
   componentDidMount() {
-    this.props.getSession();
+    // this.props.getSession();
   }
 
   render() {
@@ -27,10 +25,14 @@ export class Home extends React.Component<IHomeProp> {
           <h2>Welcome to <b>strava-cli</b>!</h2>
           <p className="lead">Homepage</p>
           {account && account.athlete ? (
-            <div>
-              <Alert color="success">You are logged in as user {account.athlete.username}.</Alert>
-                <Athlete/>
-            </div>
+              <div>
+                  <div className="d-flex">
+                      <Alert color="success" className="mr-auto p-4">You are logged in as
+                          user {account.athlete.username ? account.athlete.username : account.athlete.firstname + ' ' + account.athlete.lastname}.</Alert>
+                      <div className="p-2">Not you? <Link to="/logout">Logout</Link></div>
+                  </div>
+                  <Athlete/>
+              </div>
           ) : (
             <div>
               <Alert color="warning">

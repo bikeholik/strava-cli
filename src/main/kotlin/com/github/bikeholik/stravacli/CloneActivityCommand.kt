@@ -21,6 +21,7 @@ class CloneActivityCommand(val activitiesApi: CloneActivityService) : CliktComma
     override fun run() {
         try {
             activitiesApi.clone(activityId, dates(), weekdaysOnly)
+                    .second
                     .stream()
                     .forEach { log.debug("Activity cloned with id: ${it.id}") }
         } catch (e: ApiException) {

@@ -49,7 +49,7 @@ export class Login extends React.Component<ILoginProps, ILoginState> {
     }
 
     render() {
-        if (this.state.status === 'STATUS.AUTHENTICATED' || this.props.isAuthenticated) {
+        if (this.state.status === 'STATUS.AUTHENTICATED' || this.props.isAuthenticated || !this.state.code) {
             return (
                 <Redirect to={{
                     pathname: '/',

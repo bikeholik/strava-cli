@@ -81,10 +81,9 @@ export default (state: AuthenticationState = initialState, action): Authenticati
         showModalLogin: true
       };
     case SUCCESS(ACTION_TYPES.GET_SESSION): {
-      const isAuthenticated = action.payload && action.payload.data && action.payload.data.activated;
       return {
         ...state,
-        isAuthenticated,
+        isAuthenticated: true,
         loading: false,
         sessionHasBeenFetched: true,
         account: action.payload.data
@@ -111,33 +110,24 @@ export default (state: AuthenticationState = initialState, action): Authenticati
 export const displayAuthError = message => ({ type: ACTION_TYPES.ERROR_MESSAGE, message });
 
 export const getSession = () => async (dispatch, getState) => {
-  dispatch({
-    type: ACTION_TYPES.GET_SESSION,
-    // payload: axios.get('api/account')
-    payload: {
-
+  const token : OAuthToken = Storage.local.get(AUTH_TOKEN_KEY);
+  if(token) {
+    if(token.expiresAt * 1000 > new Date().getTime()) {
+      dispatch({
+        type: ACTION_TYPES.GET_SESSION,
+        payload: axios.get('cli/account')
+      });
+    } else {
+      const result = await dispatch({
+        type: ACTION_TYPES.GET_SESSION,
+        payload: axios.post('api/refresh', transformRequest({
+          refresh_token: token.refreshToken
+        }), config)
+      });
+      saveToken(result, true);
     }
-  });
+  }
 };
-
-// export const login = (username, password, rememberMe = false) => async (dispatch, getState) => {
-//   const result = await dispatch({
-//     type: ACTION_TYPES.LOGIN,
-//     payload: axios.post('api/authenticate', { username, password, rememberMe })
-//   });
-//   const bearerToken = result.value.headers.authorization;
-//   if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
-//     const jwt = bearerToken.slice(7, bearerToken.length);
-//     if (rememberMe) {
-//       Storage.local.set(AUTH_TOKEN_KEY, jwt);
-//     } else {
-//       Storage.session.set(AUTH_TOKEN_KEY, jwt);
-//     }
-//   }
-//   await dispatch(getSession());
-// };
-
-const AUTH_API_URI = process.env.REACT_APP_AUTH_API_URI;
 
 const config = {
   headers: {
@@ -150,13 +140,7 @@ const transformRequest = (jsonData: object = {}) =>
         .map(x => `${encodeURIComponent(x[0])}=${encodeURIComponent(x[1])}`)
         .join('&');
 
-export const login = (code, rememberMe = false) => async (dispatch, getState) => {
-  const redirectBaseUrl = location.origin;
-  const result = await dispatch({
-    type: ACTION_TYPES.LOGIN,
-    payload: axios.post(`${redirectBaseUrl}/api/authorize`, transformRequest({ code }), config)
-  });
-  // const bearerToken = result.value.headers.authorization;
+const saveToken = (result, rememberMe) => {
   const payload = result.value.data;
   const token: OAuthToken = {
     type: payload.token_type,
@@ -171,6 +155,16 @@ export const login = (code, rememberMe = false) => async (dispatch, getState) =>
       Storage.session.set(AUTH_TOKEN_KEY, token);
     }
   }
+}
+
+export const login = (code, rememberMe = false) => async (dispatch, getState) => {
+  const redirectBaseUrl = location.origin;
+  const result = await dispatch({
+    type: ACTION_TYPES.LOGIN,
+    payload: axios.post(`${redirectBaseUrl}/api/authorize`, transformRequest({ code }), config)
+  });
+  // const bearerToken = result.value.headers.authorization;
+  saveToken(result, rememberMe);
   // await dispatch(getSession());
 };
 
