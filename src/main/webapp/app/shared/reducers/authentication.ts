@@ -155,7 +155,7 @@ const saveToken = (result, rememberMe) => {
       Storage.session.set(AUTH_TOKEN_KEY, token);
     }
   }
-}
+};
 
 export const login = (code, rememberMe = false) => async (dispatch, getState) => {
   const redirectBaseUrl = location.origin;

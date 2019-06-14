@@ -32,7 +32,7 @@
     "semicolon": [true, "always", "ignore-bound-class-methods"],
     "triple-equals": [true, "allow-null-check"],
     "variable-name": false,
-    "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"],
+    "whitespace": [false, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"],
     "prefer-const": true,
     "arrow-parens": [true, "ban-single-arg-parens"],
     "arrow-return-shorthand": [true],
@@ -66,7 +66,7 @@
         "allowSingleLine": true
       }
     ],
-    "object-curly-spacing": [true, "always"],
+    "object-curly-spacing": [false, "always"],
     "space-in-parens": [true, "never"]
   },
   "rules": {
@@ -102,7 +102,7 @@
     "semicolon": [true, "always", "ignore-bound-class-methods"],
     "triple-equals": [true, "allow-null-check"],
     "typedef-whitespace": [
-      true,
+      false,
       {
         "call-signature": "nospace",
         "index-signature": "nospace",
@@ -113,7 +113,7 @@
     ],
     "variable-name": false,
     "whitespace": [
-      true,
+      false,
       "check-branch",
       "check-decl",
       "check-operator",
@@ -159,7 +159,7 @@
         "allowSingleLine": true
       }
     ],
-    "object-curly-spacing": [true, "always"],
+    "object-curly-spacing": [false, "always"],
     "space-in-parens": [true, "never"],
 
     "jsx-boolean-value": [true, "never"],

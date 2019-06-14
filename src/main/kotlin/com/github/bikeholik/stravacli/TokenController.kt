@@ -4,6 +4,9 @@ import io.swagger.client.api.AthletesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.oauth2.provider.OAuth2Authentication
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import java.util.HashMap
@@ -30,6 +33,7 @@ class TokenController(val authChannel: Channel<Tokens>, val oAuthClient: OAuthCl
     @PostMapping("refresh")
     fun refresh(@RequestParam("refresh_token") token: String): Map<*, *>? {
         val result = oAuthClient.refreshToken(token)
+        MainCommand.getOAuth(athletesApi.apiClient).accessToken = result.second.accessToken
         val res = hashMapOf<String, Any>()
         res.putAll(rawResult(result))
         res["athlete"] = athletesApi.loggedInAthlete

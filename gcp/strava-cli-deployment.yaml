@@ -15,7 +15,7 @@ spec:
         app: strava-cli
     spec:
       containers:
-        - image: gcr.io/strava-cli/strava-cli:0.0.1
+        - image: gcr.io/strava-cli/strava-cli:latest
           name: strava-cli
           env:
             - name: STRAVA_CLIENT_SECRET
