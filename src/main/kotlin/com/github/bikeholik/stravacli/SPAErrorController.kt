@@ -12,9 +12,8 @@ class SPAErrorController : ErrorController {
         return "/error"
     }
 
-    @RequestMapping("/error", method = [RequestMethod.GET, RequestMethod.POST])
+    @RequestMapping("/error", method = [RequestMethod.GET])
     fun handleError(): String {
-        //do something like logging
         return "index.html"
     }
 }

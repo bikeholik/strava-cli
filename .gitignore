@@ -42,3 +42,6 @@ node_modules/
 .db.pkcs12
 *-local.yml
 *-local.properties
+
+# deployments
+gcp/test/
