@@ -1,7 +1,7 @@
 import React from 'react';
 import {AvDateRangeField} from '@availity/reactstrap-validation-date';
 import {AvForm, AvGroup} from 'availity-reactstrap-validation';
-import CreatableSelect from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 import {connect} from 'react-redux';
 import {Button, Col, Container, FormGroup, Label, Row} from 'reactstrap';
 import axios from 'axios';
@@ -27,7 +27,8 @@ export class Clone extends React.Component<IStravaProp, ICloneActivity> {
         super(props, context);
         this.state = {
             result: null,
-            options: Storage.local.get(this.getKey(), [])
+            options: Storage.local.get(this.getKey(), []),
+            value: null
         };
     }
 
@@ -74,9 +75,9 @@ export class Clone extends React.Component<IStravaProp, ICloneActivity> {
         });
     };
 
-    private isValidNewOption= (inputValue, selectValue, selectOptions) => inputValue.match(/[0-9]/);
+    isValidNewOption = (inputValue, selectValue, selectOptions) => inputValue.match(/[0-9]+/);
 
-    private formatCreateLabel= inputValue => 'Clone activity: ' + inputValue;
+    formatCreateLabel = inputValue => 'Clone activity: ' + inputValue;
 
     render() {
         const {result, options, value} = this.state;
