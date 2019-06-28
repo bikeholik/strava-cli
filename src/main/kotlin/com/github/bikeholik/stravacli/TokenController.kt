@@ -37,7 +37,7 @@ class TokenController(val authChannel: Channel<Tokens>, val oAuthClient: OAuthCl
         val res = hashMapOf<String, Any>()
         res.putAll(rawResult(result))
         res["athlete"] = athletesApi.loggedInAthlete
-        return result.first
+        return res
     }
 
     @Suppress("UNCHECKED_CAST")
